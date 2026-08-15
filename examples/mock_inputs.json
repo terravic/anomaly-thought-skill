@@ -1,0 +1,27 @@
+{
+  "phase_1": {
+    "summary": "UI freeze during network slowdown in catalog search filter",
+    "manifestation": "The search filter dropdown becomes unresponsive, with the loading spinner frozen in place for over 15 seconds without throwing an explicit crash alert or error dialog.",
+    "triggering_event": "The user enters a search query into the live filter input field while the network connection bandwidth is throttled to 50 kbps (simulated 2G/edge conditions).",
+    "reproducibility": "100% reproducible on throttled or high-latency connections.\n1. Launch the application.\n2. Navigate to the Catalog view.\n3. Throttle network link to 50 kbps.\n4. Rapidly type 5 characters into the filter input box.\n5. Observe UI freeze."
+  },
+  "phase_2": {
+    "summary": "Mobile application crash during low-battery mode and active background synchronization",
+    "discovery_method": "Automated crash telemetry alert (SIGSEGV / OOM termination recorded in staging telemetry).",
+    "pre_anomaly_state": "Device OS version 14.2, device memory utilization at 88% (constrained), battery level at 9% with system Low-Power Mode active, and background data synchronization worker active with 45 pending payloads.",
+    "triggering_event": "Background synchronization worker attempts to batch-deserialize and allocate an uncompressed 25MB sync payload while the host OS aggressively limits CPU execution quotas and background memory under low-battery throttling.",
+    "post_anomaly_state": "Application process is abruptly terminated to the home screen; background worker thread is killed; sync checkpoint file is left in a partially written 0-byte lock state.",
+    "reproducibility": "Consistently reproducible (4 out of 5 attempts) under low power and high queue volume.\n1. Configure device battery level to 8% (Low-Power Mode triggered).\n2. Enqueue 45 uncompressed synchronization items.\n3. Trigger background sync worker.\n4. Observe process termination."
+  },
+  "phase_3": {
+    "summary": "Hardware peripheral pairing failure caused by background thread UI violation",
+    "core_issue": "The peripheral pairing modal dialog fails to render on screen during accessory onboarding, leaving the user interface stuck on an infinite loading spinner. Triggered when the user taps \"Pair New Peripheral\" while the background telemetry worker holds the main synchronization lock.",
+    "environment_state": "Pre-State: Host OS version 16.5, available RAM 1.2 GB, Bluetooth daemon active, peripheral streaming telemetry at 100Hz.\nPost-State: Pairing timeout expires after 60 seconds; peripheral connection state is left stranded in \"Connecting\"; main UI thread watchdog logs an 8.4-second non-responsive freeze.",
+    "frequency": 4,
+    "frequency_rationale": "Occurs on approximately 70% of initial onboarding attempts whenever high-frequency sensor streaming is concurrently active.",
+    "severity": 4,
+    "severity_rationale": "Completely blocks first-time device setup for end users with no automatic recovery or actionable error messaging.",
+    "root_cause_category": "Verification Failure (Built Wrong)",
+    "root_cause_details": "The peripheral onboarding coordinator invoked `showPairingDialog()` directly from a background dispatch callback thread instead of dispatching to the Main UI Thread. Unit tests mocked the UI dispatcher layer, and automated integration tests did not assert thread affinity during mock pairing."
+  }
+}
