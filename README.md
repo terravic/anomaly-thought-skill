@@ -153,5 +153,5 @@ All 25 unit and scenario test cases will execute and validate:
 
 ## License
 
-This project is licensed under the Apache License, Version 2.0. See the [LICENSE](file:///usr/local/google/home/rolandmm/Projects/anomaly-thought-skill/LICENSE) file for details.
+This project is licensed under the Apache License, Version 2.0. See the [LICENSE](LICENSE) file for details.
 

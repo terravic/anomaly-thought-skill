@@ -80,7 +80,7 @@ By default, at the start of an interaction, present the three available phases t
    * Wait for the user's response before asking the subsequent question.
 2. **Gentle Disambiguation**:
    * If the user provides a very short, vague, or underspecified response (e.g., *"it crashed"*, *"it froze"*), gently ask for a specific parameter (e.g., *"Was there an error code, or did it crash back to the home screen?"*) before advancing to the next question.
-   * Refer to the [Disambiguation Guide](file:///usr/local/google/home/rolandmm/Projects/anomaly-thought-skill/references/disambiguation_guide.md) for specialized prompts.
+   * Refer to the [Disambiguation Guide](references/disambiguation_guide.md) for specialized prompts.
 3. **Professional, Technical Tone**:
    * Maintain a concise, professional, and objective tone focused strictly on system behaviors, state boundaries, and root causes.
 4. **No Brand Names**:
@@ -90,15 +90,15 @@ By default, at the start of an interaction, present the three available phases t
 
 ## 4. Programmatic Helper Integration
 
-The skill is backed by [`anomaly_helper.py`](file:///usr/local/google/home/rolandmm/Projects/anomaly-thought-skill/scripts/anomaly_helper.py).
+The skill is backed by [`anomaly_helper.py`](scripts/anomaly_helper.py).
 
 ### Risk Score Formula & Tiers
 $$\text{Risk Score} = \text{Frequency} \times \text{Severity} \quad (\text{Frequency, Severity} \in [1, 5])$$
 
-* **🔴 Critical (Red)**: $\text{Score} \ge 16$ — Immediate escalation; hotfix required.
-* **🟠 High (Orange)**: $\text{Score} \ge 10$ — Current sprint priority; resolve within 24–48 hours.
+* **🔴 Critical  (Red)**: $\text{Score} \ge 16$ — Immediate escalation; hotfix required.
+* **🟠 High   (Orange)**: $\text{Score} \ge 10$ — Current sprint priority; resolve within 24–48 hours.
 * **🟡 Medium (Yellow)**: $\text{Score} \ge 5$ — Standard defect triage in upcoming release.
-* **🟢 Low (Green)**: $\text{Score} < 5$ — Routine backlog item.
+* **🟢 Low     (Green)**: $\text{Score} < 5$ — Routine backlog item.
 
 ### Helper CLI Usage Examples
 ```bash
@@ -118,10 +118,10 @@ python scripts/anomaly_helper.py --phase 3 --file examples/mock_inputs.json --ou
 
 ## 5. Reference Documentation & Examples
 
-* **Detailed Phase Specifications**: [references/phase_specifications.md](file:///usr/local/google/home/rolandmm/Projects/anomaly-thought-skill/references/phase_specifications.md)
-* **Gentle Disambiguation Guide**: [references/disambiguation_guide.md](file:///usr/local/google/home/rolandmm/Projects/anomaly-thought-skill/references/disambiguation_guide.md)
-* **Risk Matrix Reference**: [references/risk_matrix.md](file:///usr/local/google/home/rolandmm/Projects/anomaly-thought-skill/references/risk_matrix.md)
-* **Root Cause Taxonomies**: [references/root_cause_taxonomies.md](file:///usr/local/google/home/rolandmm/Projects/anomaly-thought-skill/references/root_cause_taxonomies.md)
-* **Phase 1 Walkthrough Example**: [examples/phase1_example.md](file:///usr/local/google/home/rolandmm/Projects/anomaly-thought-skill/examples/phase1_example.md)
-* **Phase 2 Walkthrough Example**: [examples/phase2_example.md](file:///usr/local/google/home/rolandmm/Projects/anomaly-thought-skill/examples/phase2_example.md)
-* **Phase 3 Walkthrough Example**: [examples/phase3_example.md](file:///usr/local/google/home/rolandmm/Projects/anomaly-thought-skill/examples/phase3_example.md)
+* **Detailed Phase Specifications**: [references/phase_specifications.md](references/phase_specifications.md)
+* **Gentle Disambiguation Guide**: [references/disambiguation_guide.md](references/disambiguation_guide.md)
+* **Risk Matrix Reference**: [references/risk_matrix.md](references/risk_matrix.md)
+* **Root Cause Taxonomies**: [references/root_cause_taxonomies.md](references/root_cause_taxonomies.md)
+* **Phase 1 Walkthrough Example**: [examples/phase1_example.md](examples/phase1_example.md)
+* **Phase 2 Walkthrough Example**: [examples/phase2_example.md](examples/phase2_example.md)
+* **Phase 3 Walkthrough Example**: [examples/phase3_example.md](examples/phase3_example.md)
