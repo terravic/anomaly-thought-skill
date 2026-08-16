@@ -4,6 +4,8 @@ An intelligent, interactive, and generic **"Anomaly Thought Partner" Skill** des
 
 This skill assists software engineers, QA specialists, and technical leads in logging, triaging, and diagnosing software bugs and system anomalies. It utilizes a progressive **"Crawl, Walk, Run"** workflow to minimize developer friction while ensuring complete, high-quality, reproducible defect reports with quantitative risk evaluation and root-cause classification.
 
+![Anomaly Thought Partner in Action](assets/skill_in_action.jpg)
+
 ---
 
 ## Key Features
@@ -32,6 +34,8 @@ anomaly-thought-skill/
 ├── SKILL.md                          # Primary Skill instruction file with YAML frontmatter
 ├── README.md                         # Project documentation and developer guide
 ├── LICENSE                           # Apache License 2.0
+├── assets/
+│   └── skill_in_action.jpg           # Skill in action visual overview
 ├── scripts/
 │   ├── __init__.py
 │   ├── anomaly_helper.py             # Core Python helper library & CLI
