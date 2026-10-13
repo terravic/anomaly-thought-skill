@@ -1,6 +1,6 @@
 # Anomaly Thought Partner: Phase Specifications
 
-This reference specifies the objectives, sequential questioning protocols, schema constraints, and output artifacts across the three operational phases of the Anomaly Thought Partner Skill.
+This reference specifies the objectives, sequential questioning protocols, schema constraints, and output documents across the three operational phases of the Anomaly Thought Partner Skill.
 
 ---
 
@@ -9,15 +9,15 @@ This reference specifies the objectives, sequential questioning protocols, schem
 | Phase | Paradigm | Target Audience | Primary Focus | Output Report |
 | :--- | :--- | :--- | :--- | :--- |
 | **Phase 1** | **Crawl** | Rapid triage / First responders | Core reproduction pathway | `Core Bug Report` |
-| **Phase 2** | **Walk** | QA engineers / Diagnostic devs | Environmental state transitions | `Detailed Technical Anomaly Report` |
-| **Phase 3** | **Run** | Senior engineers / Staff / QAC | Root cause & quantitative risk | `Comprehensive QAC Recommendation Report` |
+| **Phase 2** | **Walk** | QA engineers / Diagnostic developers | Environmental state transitions | `Detailed Technical Anomaly Report` |
+| **Phase 3** | **Run** | Senior engineers / Quality Assurance | Root cause & quantitative risk | `Comprehensive Quality Assurance Report` |
 
 ---
 
 ## Phase 1: Core Triage (Crawl)
 
 ### Objective
-Capture the absolute minimum essential information needed to reproduce a defect immediately, minimizing developer friction.
+Capture the minimum information needed to reproduce a defect immediately.
 
 ### Question Sequence (Strictly One at a Time)
 1. **Manifestation**:
@@ -34,7 +34,7 @@ Capture the absolute minimum essential information needed to reproduce a defect 
 
 ### Synthesized Output Structure
 * **Header**: `# Core Bug Report`
-* **Metadata Table**: Phase (Phase 1: Core Triage), Status (Ready for Triage), Summary
+* **Summary Table**: Phase (Phase 1: Core Triage), Status (Ready for Triage), Summary
 * **Sections**: Summary, Manifestation, Triggering Event, Steps to Reproduce
 
 ---
@@ -42,7 +42,7 @@ Capture the absolute minimum essential information needed to reproduce a defect 
 ## Phase 2: Contextual Depth (Walk)
 
 ### Objective
-Capture structured pre- and post-anomaly system states and execution parameters to eliminate time-consuming back-and-forth between QA and engineering.
+Capture structured pre- and post-anomaly system states and execution parameters to reduce clarification cycles between QA and engineering.
 
 ### Question Sequence (Strictly One at a Time)
 1. **Discovery Method**:
@@ -65,15 +65,15 @@ Capture structured pre- and post-anomaly system states and execution parameters 
 
 ### Synthesized Output Structure
 * **Header**: `# Detailed Technical Anomaly Report`
-* **Metadata Table**: Phase, Status, Summary, Discovery Method
+* **Summary Table**: Phase, Status, Summary, Discovery Method
 * **Sections**: Executive Summary, Discovery & Reproduction, System State Transitions Table (Pre vs. Post vs. Trigger), Technical Trigger Details
 
 ---
 
-## Phase 3: The True "Thought Partner" (Run)
+## Phase 3: Thought Partner (Run)
 
 ### Objective
-Elevate engineering quality and reliability through quantitative risk assessment, state transition modeling, and retrospective root-cause classification.
+Perform quantitative risk assessment, state transition modeling, and retrospective root-cause classification.
 
 ### Question Sequence (Strictly One at a Time)
 1. **The Core Issue**:
@@ -94,6 +94,6 @@ Elevate engineering quality and reliability through quantitative risk assessment
 * `root_cause_details` (string, non-empty)
 
 ### Synthesized Output Structure
-* **Header**: `# Comprehensive QAC Recommendation Report`
-* **Metadata Table**: Phase, Overall Risk Tier (with badge/color), Calculated Risk Score (Freq x Sev), Root Cause Category, Recommended SLA Action
+* **Header**: `# Comprehensive Quality Assurance Report`
+* **Summary Table**: Phase, Overall Risk Tier (with label/color), Calculated Risk Score (Freq x Sev), Root Cause Category, Recommended SLA Action
 * **Sections**: Executive Summary, Quantitative Risk Assessment Matrix, Core Issue & Reproduction Pathway, Environmental Context, Retrospective Root-Cause Categorization, Corrective & Preventive Actions (CAPA)

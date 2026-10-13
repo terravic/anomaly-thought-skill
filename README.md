@@ -1,8 +1,8 @@
 # Anomaly Thought Partner Skill
 
-An intelligent, interactive, and generic **"Anomaly Thought Partner" Skill** designed for Gemini Enterprise and skill-compliant conversational AI environments.
+A structured conversational skill for logging, triaging, and diagnosing software bugs and system anomalies.
 
-This skill assists software engineers, QA specialists, and technical leads in logging, triaging, and diagnosing software bugs and system anomalies. It utilizes a progressive **"Crawl, Walk, Run"** workflow to minimize developer friction while ensuring complete, high-quality, reproducible defect reports with quantitative risk evaluation and root-cause classification.
+This skill assists non-technical reporters, QA specialists, and software engineers in documenting software issues and unexpected system behaviors. It uses a three-phase **"Crawl, Walk, Run"** workflow to collect reproducible defect reports, environmental state transitions, quantitative risk scores, and root-cause classifications.
 
 ![Anomaly Thought Partner in Action](assets/skill_in_action.jpg)
 
@@ -11,29 +11,168 @@ This skill assists software engineers, QA specialists, and technical leads in lo
 ## Key Features
 
 * **Progressive 3-Phase Architecture**:
-  * **Phase 1: Core Triage (Crawl)** — 3 rapid questions capturing the minimal reproduction pathway for quick bug reporting.
-  * **Phase 2: Contextual Depth (Walk)** — 5 structured questions capturing pre- and post-anomaly environmental state parameters.
-  * **Phase 3: The True "Thought Partner" (Run)** — 4 elevated questions performing risk estimation ($$\text{Risk} = \text{Frequency} \times \text{Severity}$$) and retrospective root-cause categorization (Requirements vs. Verification vs. Other).
-* **Strict Conversational Protocol**:
-  * Enforces **strictly one question per conversational turn**.
-  * Employs **Gentle Disambiguation** when receiving brief or underspecified inputs.
-  * Maintains an objective, technical tone free of proprietary brand names.
-* **Robust Python Helper (`scripts/anomaly_helper.py`)**:
+  * **Phase 1: Core Triage (Crawl)** - 3 sequential questions capturing the minimal reproduction pathway for quick issue reporting.
+  * **Phase 2: Contextual Depth (Walk)** - 5 sequential questions capturing pre- and post-anomaly environmental state parameters.
+  * **Phase 3: Thought Partner (Run)** - 4 sequential questions performing risk estimation ($$\text{Risk} = \text{Frequency} \times \text{Severity}$$) and retrospective root-cause categorization (Requirements vs. Verification vs. Other).
+* **Conversational Interaction Protocol**:
+  * Asks one question per conversational turn.
+  * Applies **Gentle Disambiguation** when receiving brief or incomplete inputs.
+  * Validates required phase parameters before generating the structured report.
+* **Python Helper Module ([`scripts/anomaly_helper.py`](scripts/anomaly_helper.py))**:
   * Dynamic risk score calculation with 4-tier classification (Critical / High / Medium / Low).
   * Input schema validation ensuring all required phase fields are populated.
-  * Automated Markdown report generation tailored to each phase.
+  * Automated Markdown report generation for each phase.
 * **Automated Test Suite**:
-  * Comprehensive `unittest` test suite covering risk calculations, tier boundaries, input validation, report generation, and all 3 specification scenarios.
+  * Unit and scenario test suite covering risk score calculations, tier boundaries, input validation, and report generation across all three phases.
 
 ---
 
 ## Quick Navigation
 
-* 💬 [**How to Use in Chat Harnesses (Non-Technical Guide & Examples)**](#using-this-skill-in-chat-agent-harnesses-gemini-enterprise-antigravity-etc)
-* 📋 [**Conversational Workflow Summary**](#conversational-workflow-summary)
-* 🧮 [**Risk Score Calculation Matrix**](#risk-score-calculation-matrix)
-* 💻 [**Python Helper CLI Reference**](#python-helper-cli-reference)
-* 🧪 [**Running Automated Tests**](#running-automated-tests)
+* [Non-Technical User Guide](#non-technical-user-guide)
+* [Directory Structure](#directory-structure)
+* [Conversational Workflow Summary](#conversational-workflow-summary)
+* [Technical Walkthrough Examples](#technical-walkthrough-examples)
+* [Risk Score Calculation Matrix](#risk-score-calculation-matrix)
+* [Python Helper CLI Reference](#python-helper-cli-reference)
+* [Running Automated Tests](#running-automated-tests)
+
+---
+
+## Non-Technical User Guide
+
+You do not need programming knowledge or command-line experience to use this skill in a chat interface. You interact with the assistant in plain language, and it guides you step by step to build a complete issue report.
+
+### How to Use the Skill
+
+1. **Start the Conversation**: Tell the assistant that you want to report a problem (for example, *"I need to report a website bug"* or *"Help me document an app issue"*).
+2. **Select a Phase**: The assistant will ask which of the three phases you want to use:
+   * **Phase 1 (Crawl)**: Choose this when you want to report a problem quickly in 3 simple questions (what happened, what caused it, and how to repeat it).
+   * **Phase 2 (Walk)**: Choose this when you want to include extra details about the device or situation before and after the problem happened (5 questions).
+   * **Phase 3 (Run)**: Choose this when you are reviewing a problem with your team to rate how often it happens, how badly it affects users, and why it occurred (4 questions).
+3. **Answer One Question at a Time**: The assistant asks only one question at a time. If your answer is brief (for example, *"the page stopped working"*), the assistant will ask a simple follow-up question to help clarify what you saw on screen.
+4. **Copy Your Finished Report**: After you answer the questions, the assistant generates a formatted summary report that you can copy and paste into an email, support ticket, or project tracker.
+
+### Real-World Examples for Non-Technical Users
+
+#### Real-World Example 1: Online Store Checkout Button Not Working (Phase 1 - Quick Report)
+
+**Scenario**: A customer support specialist notices that customers cannot finish checking out when they apply a seasonal discount code.
+
+* **User**: *"Help me report a checkout problem using Phase 1."*
+* **Assistant**: *"What exactly does the user see or experience when this anomaly occurs?"*
+* **User**: *"The 'Place Order' button turns gray and nothing happens when you click it. No error message appears on the page."*
+* **Assistant**: *"What specific action, update, or system event triggered this anomaly?"*
+* **User**: *"Entering the promo code SAVE20 in the discount box on the checkout page and clicking Apply."*
+* **Assistant**: *"Can you reliably reproduce this? If so, what are the steps?"*
+* **User**: *"Yes, it happens every time. 1. Add any item to the shopping cart. 2. Go to the checkout page. 3. Enter SAVE20 in the promo code box and click Apply. 4. Click 'Place Order' and notice the button does not respond."*
+
+**Generated Report**:
+```markdown
+# Core Bug Report
+
+| Metric | Details |
+| :--- | :--- |
+| **Phase** | Phase 1: Core Triage (Crawl) |
+| **Status** | Ready for Triage |
+| **Summary** | Checkout button stops responding after applying discount code SAVE20 |
+
+---
+
+## 1. Summary
+> **Checkout button stops responding after applying discount code SAVE20**
+
+## 2. Manifestation
+The 'Place Order' button turns gray and nothing happens when you click it. No error message appears on the page.
+
+## 3. Triggering Event
+Entering the promo code SAVE20 in the discount box on the checkout page and clicking Apply.
+
+## 4. Steps to Reproduce
+Happens every time.
+1. Add any item to the shopping cart.
+2. Go to the checkout page.
+3. Enter SAVE20 in the promo code box and click Apply.
+4. Click 'Place Order' and notice the button does not respond.
+```
+
+---
+
+#### Real-World Example 2: Expense App Closing When Uploading a Receipt Photo (Phase 2 - Detailed Report)
+
+**Scenario**: An office manager is reporting an issue where the mobile expense app closes unexpectedly when employees try to attach a photo of a paper receipt while their phone battery is low.
+
+* **User**: *"I need to log an issue with our mobile expense app using Phase 2."*
+* **Assistant**: *"How was this discovered (e.g., manual testing, automated crash logs, user report)?"*
+* **User**: *"Reported by three team members submitting travel expenses."*
+* **Assistant**: *"What was the system state right before the anomaly occurred? (e.g., OS version, battery level, device memory load, background syncing)?"*
+* **User**: *"Their phones were on low battery."*
+* **Assistant** *(Gentle Disambiguation)*: *"To help narrow down the device conditions, do you know approximately what battery percentage the phones had, whether Battery Saver mode was turned on, and whether other uploads were waiting in the background?"*
+* **User**: *"Phone battery was at 10% with Battery Saver turned on, and 5 previous expense drafts were still uploading in the background."*
+* **Assistant**: *"What was the precise sequence of events or specific action that triggered the anomaly?"*
+* **User**: *"Opening a new expense form, tapping 'Attach Receipt', and taking a high-resolution camera photo."*
+* **Assistant**: *"What happened immediately after the anomaly? (e.g., app crash, automatic recovery, system freeze)?"*
+* **User**: *"The app closed immediately back to the phone home screen, and when reopened, the unsaved expense draft was gone."*
+* **Assistant**: *"What are the exact steps to reproduce this issue reliably?"*
+* **User**: *"1. Turn on Battery Saver mode with battery around 10%. 2. Start uploading 5 expense drafts. 3. Open a new expense and take a receipt photo with the camera. 4. The app closes."*
+
+**Generated Report**:
+```markdown
+# Detailed Technical Anomaly Report
+
+| Attribute | Specification |
+| :--- | :--- |
+| **Phase** | Phase 2: Contextual Depth (Walk) |
+| **Status** | Diagnostic Ready |
+| **Summary** | Expense app closes when taking receipt photo during Battery Saver mode |
+| **Discovery Method** | Reported by three team members submitting travel expenses. |
+
+---
+
+## 1. Executive Summary
+**Expense app closes when taking receipt photo during Battery Saver mode**
+
+---
+
+## 2. Discovery & Reproduction
+* **Discovery Method**: Reported by three team members submitting travel expenses.
+* **Reproducibility**:
+1. Turn on Battery Saver mode with battery around 10%.
+2. Start uploading 5 expense drafts.
+3. Open a new expense and take a receipt photo with the camera.
+4. The app closes.
+
+---
+
+## 3. System State Transitions
+
+| State Boundary | System Condition / Parameter Profile |
+| :--- | :--- |
+| **Pre-Anomaly State** | Phone battery was at 10% with Battery Saver turned on, and 5 previous expense drafts were still uploading in the background. |
+| **Triggering Event** | Opening a new expense form, tapping 'Attach Receipt', and taking a high-resolution camera photo. |
+| **Post-Anomaly State** | The app closed immediately back to the phone home screen, and when reopened, the unsaved expense draft was gone. |
+
+---
+
+## 4. Technical Trigger Details
+Opening a new expense form, tapping 'Attach Receipt', and taking a high-resolution camera photo.
+```
+
+---
+
+#### Real-World Example 3: Reviewing Impact of a Broken Appointment Calendar (Phase 3 - Impact & Cause Review)
+
+**Scenario**: A clinic coordinator and product lead review an issue where patients booking appointments on the last day of the month see a blank calendar.
+
+* **User**: *"Let's run Phase 3 for the blank appointment calendar issue."*
+* **Assistant**: *"How does this anomaly manifest, and what are the exact steps/triggers to reproduce it?"*
+* **User**: *"When a patient selects the 31st day of a month and clicks 'Next Available Week', the calendar grid turns completely blank instead of showing next month's time slots."*
+* **Assistant**: *"What was the system state before the anomaly (OS, memory, sync state), and what was the state immediately after?"*
+* **User**: *"Before: Patient is logged into the booking portal with available slots loaded for the current month. After: The calendar area is blank and the 'Confirm Appointment' button stays disabled until the page is refreshed."*
+* **Assistant**: *"On a scale of 1 to 5, how would you rate the Frequency of this issue, and on a scale of 1 to 5, how would you rate its Severity? Please provide a brief rationale for both."*
+* **User**: *"Frequency is 3 out of 5 because it affects anyone browsing across month-end dates. Severity is 4 out of 5 because patients cannot book appointments for the following month without refreshing and starting over."*
+* **Assistant**: *"Looking at the root cause, was this a failure of Requirements (specified wrong), Verification (built wrong), or something else? Please provide any technical root-cause details."*
+* **User**: *"Verification Failure (built wrong). The calendar date calculation added 7 days to the day number without rolling over into the next month, and our test cases only checked dates in the middle of the month."*
 
 ---
 
@@ -41,33 +180,34 @@ This skill assists software engineers, QA specialists, and technical leads in lo
 
 ```text
 anomaly-thought-skill/
-├── SKILL.md                          # Primary Skill instruction file with YAML frontmatter
-├── README.md                         # Project documentation and developer guide
-├── LICENSE                           # Apache License 2.0
-├── assets/
-│   └── skill_in_action.jpg           # Skill in action visual overview
-├── scripts/
-│   ├── __init__.py
-│   ├── anomaly_helper.py             # Core Python helper library & CLI
-│   └── export_reports.py             # Batch report export utility
-├── tests/
-│   ├── __init__.py
-│   ├── test_anomaly_helper.py        # Unit tests for risk calculation, validation, & formatting
-│   └── test_scenarios.py             # Scenario-specific validation tests for Phases 1, 2, and 3
-├── examples/
-│   ├── phase1_example.md             # Scenario 1: UI freeze during network slowdown
-│   ├── phase2_example.md             # Scenario 2: Mobile crash during low battery & sync
-│   ├── phase3_example.md             # Scenario 3: Hardware pairing failure & verification root cause
-│   ├── mock_inputs.json              # Mock input payloads for all 3 scenarios
-│   └── generated_reports/            # Pre-generated sample markdown reports
-│       ├── phase1_report.md
-│       ├── phase2_report.md
-│       └── phase3_report.md
-└── references/
-    ├── phase_specifications.md       # Deep dive into phase protocols, questions, and schemas
-    ├── disambiguation_guide.md       # Gentle disambiguation prompts and examples
-    ├── risk_matrix.md                # Risk formula, tier thresholds, and SLA actions
-    └── root_cause_taxonomies.md      # Requirements vs. Verification vs. Other failure taxonomies
+|-- LICENSE                           # Apache License 2.0
+|-- README.md                         # Project documentation and user guide
+|-- SKILL.md                          # Primary Skill instruction file with YAML frontmatter
+|-- prd.md                            # Product Requirements Document
+|-- assets/
+|   `-- skill_in_action.jpg           # Visual overview of the skill workflow
+|-- examples/
+|   |-- generated_reports/            # Pre-generated sample markdown reports
+|   |   |-- phase1_report.md
+|   |   |-- phase2_report.md
+|   |   `-- phase3_report.md
+|   |-- mock_inputs.json              # Mock input payloads for all 3 phases
+|   |-- phase1_example.md             # Phase 1 walkthrough: UI freeze during network slowdown
+|   |-- phase2_example.md             # Phase 2 walkthrough: Mobile crash during low battery & sync
+|   `-- phase3_example.md             # Phase 3 walkthrough: Peripheral pairing failure & root cause
+|-- references/
+|   |-- disambiguation_guide.md       # Gentle disambiguation prompts and examples
+|   |-- phase_specifications.md       # Phase protocols, questions, and schemas
+|   |-- risk_matrix.md                # Risk formula, tier thresholds, and SLA actions
+|   `-- root_cause_taxonomies.md      # Requirements vs. Verification vs. Other failure taxonomies
+|-- scripts/
+|   |-- __init__.py
+|   |-- anomaly_helper.py             # Core Python helper library & CLI
+|   `-- export_reports.py             # Batch report export utility
+`-- tests/
+    |-- __init__.py
+    |-- test_anomaly_helper.py        # Unit tests for risk calculation, validation, & formatting
+    `-- test_scenarios.py             # Scenario validation tests for Phases 1, 2, and 3
 ```
 
 ---
@@ -88,177 +228,50 @@ anomaly-thought-skill/
 5. **Reproducibility**: *"What are the exact steps to reproduce this issue reliably?"*
 * **Output**: `Detailed Technical Anomaly Report` (with Pre vs. Post State Table)
 
-### Phase 3: The True "Thought Partner" (Run)
+### Phase 3: Thought Partner (Run)
 1. **The Core Issue**: *"How does this anomaly manifest, and what are the exact steps/triggers to reproduce it?"*
 2. **The Environment**: *"What was the system state before the anomaly (OS, memory, sync state), and what was the state immediately after?"*
 3. **Risk Estimation**: *"On a scale of 1 to 5, how would you rate the Frequency of this issue, and on a scale of 1 to 5, how would you rate its Severity? Please provide a brief rationale for both."*
 4. **Retrospective & Root Cause**: *"Looking at the root cause, was this a failure of Requirements (specified wrong), Verification (built wrong), or something else? Please provide any technical root-cause details."*
-* **Output**: `Comprehensive QAC Recommendation Report` (with Risk Score Matrix and CAPA recommendations)
+* **Output**: `Comprehensive Quality Assurance Report` (with Risk Score Matrix and CAPA recommendations)
 
 ---
 
-## Using This Skill in Chat Agent Harnesses (Gemini Enterprise, Antigravity, etc.)
+## Technical Walkthrough Examples
 
-If you are using this skill in a conversational environment (such as **Gemini Enterprise App**, **Antigravity**, or any skill-enabled chat UI), **no coding or terminal commands are required**. You simply converse with the AI in natural language.
+Detailed engineering transcripts and generated output reports are provided in the `examples/` directory:
 
-### How It Works for Non-Technical Users
+* **Phase 1 Engineering Walkthrough**: [examples/phase1_example.md](examples/phase1_example.md) (Sample output: [examples/generated_reports/phase1_report.md](examples/generated_reports/phase1_report.md))
+* **Phase 2 Engineering Walkthrough**: [examples/phase2_example.md](examples/phase2_example.md) (Sample output: [examples/generated_reports/phase2_report.md](examples/generated_reports/phase2_report.md))
+* **Phase 3 Engineering Walkthrough**: [examples/phase3_example.md](examples/phase3_example.md) (Sample output: [examples/generated_reports/phase3_report.md](examples/generated_reports/phase3_report.md))
 
-1. **Start the Chat**: Type a simple sentence indicating you want to log or triage an issue (e.g., *"I need to log an anomaly"* or *"Help me report a bug"*).
-2. **Choose a Phase**: The assistant will present the 3 phases. Choose the one that matches your current goal:
-   * **Phase 1 (Crawl)**: When you just need to get reproduction steps logged quickly (3 questions).
-   * **Phase 2 (Walk)**: When QA and developers need detailed device/system parameters (5 questions).
-   * **Phase 3 (Run)**: When you need severity/frequency risk ratings and root-cause analysis (4 questions).
-3. **Answer One Question at a Time**: The assistant will guide you step-by-step. If an answer is vague (e.g., *"it froze"*), the assistant will politely ask for a bit more detail before moving forward.
-4. **Get Your Finished Report**: Once all questions are answered, the assistant automatically formats and prints a clean, structured Markdown report that you can copy and paste directly into your team's issue tracker or ticketing system.
+### Sample Phase 3 Output (`Comprehensive Quality Assurance Report`)
 
----
-
-### Step-by-Step Chat Examples & Outputs
-
-#### Example 1: Phase 1 — Core Triage (Crawl)
-
-**User Prompt to Start:**
-> *"Help me log a bug using Phase 1."*
-
-**Interactive Conversation:**
-* **Assistant**: *"What exactly does the user see or experience when this anomaly occurs?"*
-* **User**: *"The search filter dropdown freezes in place for over 15 seconds without throwing an error dialog."*
-* **Assistant**: *"What specific action, update, or system event triggered this anomaly?"*
-* **User**: *"Typing a search query into the live filter while network bandwidth is throttled to 50 kbps."*
-* **Assistant**: *"Can you reliably reproduce this? If so, what are the steps?"*
-* **User**: *"Yes, 100% reproducible. 1. Go to Catalog. 2. Set network throttle to 50 kbps. 3. Type 5 characters in search box. 4. UI freezes."*
-
-**Final Output Generated by the Skill:**
 ```markdown
-# Core Bug Report
-
-| Metric | Details |
-| :--- | :--- |
-| **Phase** | Phase 1: Core Triage (Crawl) |
-| **Status** | Ready for Triage |
-| **Summary** | UI freeze during network slowdown in catalog search filter |
-
----
-
-## 1. Summary
-> **UI freeze during network slowdown in catalog search filter**
-
-## 2. Manifestation
-The search filter dropdown freezes in place for over 15 seconds without throwing an error dialog.
-
-## 3. Triggering Event
-Typing a search query into the live filter while network bandwidth is throttled to 50 kbps.
-
-## 4. Steps to Reproduce
-100% reproducible.
-1. Go to Catalog.
-2. Set network throttle to 50 kbps.
-3. Type 5 characters in search box.
-4. UI freezes.
-```
-
----
-
-#### Example 2: Phase 2 — Contextual Depth (Walk)
-
-**User Prompt to Start:**
-> *"I want to log a mobile crash using Phase 2."*
-
-**Interactive Conversation:**
-* **Assistant**: *"How was this discovered (e.g., manual testing, automated crash logs, user report)?"*
-* **User**: *"Automated crash telemetry alert in the staging build."*
-* **Assistant**: *"What was the system state right before the anomaly occurred? (e.g., OS version, battery level, device memory load, background syncing)?"*
-* **User**: *"Low battery and syncing."*
-* **Assistant** *(Gentle Disambiguation)*: *"To help engineering isolate resource limits, could you provide the approximate battery level percentage, device OS version, and whether background sync queue items were pending?"*
-* **User**: *"OS version 14.2, memory usage at 88%, battery at 9% with Low-Power Mode active, and background sync worker active with 45 pending items."*
-* **Assistant**: *"What was the precise sequence of events or specific action that triggered the anomaly?"*
-* **User**: *"The background worker attempted to batch-deserialize an uncompressed 25MB sync payload while the OS aggressively throttled CPU under low-battery mode."*
-* **Assistant**: *"What happened immediately after the anomaly? (e.g., app crash, automatic recovery, system freeze)?"*
-* **User**: *"The application process abruptly terminated to the home screen, killing the background thread and leaving a 0-byte lock file."*
-* **Assistant**: *"What are the exact steps to reproduce this issue reliably?"*
-* **User**: *"Set device battery to 8%, queue 45 sync items, and trigger the sync worker."*
-
-**Final Output Generated by the Skill:**
-```markdown
-# Detailed Technical Anomaly Report
-
-| Attribute | Specification |
-| :--- | :--- |
-| **Phase** | Phase 2: Contextual Depth (Walk) |
-| **Status** | Diagnostic Ready |
-| **Summary** | Mobile application crash during low-battery mode and active background synchronization |
-| **Discovery Method** | Automated crash telemetry alert in the staging build. |
-
----
-
-## 1. Executive Summary
-**Mobile application crash during low-battery mode and active background synchronization**
-
----
-
-## 2. Discovery & Reproduction
-* **Discovery Method**: Automated crash telemetry alert in the staging build.
-* **Reproducibility**: Set device battery to 8%, queue 45 sync items, and trigger the sync worker.
-
----
-
-## 3. System State Transitions
-
-| State Boundary | System Condition / Parameter Profile |
-| :--- | :--- |
-| **Pre-Anomaly State** | OS version 14.2, memory usage at 88%, battery at 9% with Low-Power Mode active, and background sync worker active with 45 pending items. |
-| **Triggering Event** | The background worker attempted to batch-deserialize an uncompressed 25MB sync payload while the OS aggressively throttled CPU under low-battery mode. |
-| **Post-Anomaly State** | The application process abruptly terminated to the home screen, killing the background thread and leaving a 0-byte lock file. |
-
----
-
-## 4. Technical Trigger Details
-The background worker attempted to batch-deserialize an uncompressed 25MB sync payload while the OS aggressively throttled CPU under low-battery mode.
-```
-
----
-
-#### Example 3: Phase 3 — The True "Thought Partner" (Run)
-
-**User Prompt to Start:**
-> *"Let's do a Phase 3 analysis for a peripheral pairing failure."*
-
-**Interactive Conversation:**
-* **Assistant**: *"How does this anomaly manifest, and what are the exact steps/triggers to reproduce it?"*
-* **User**: *"The peripheral pairing dialog fails to render on screen, leaving an infinite loading spinner when the user taps 'Pair New Peripheral' while background telemetry is streaming."*
-* **Assistant**: *"What was the system state before the anomaly (OS, memory, sync state), and what was the state immediately after?"*
-* **User**: *"Pre-State: OS 16.5, 1.2 GB RAM available, Bluetooth active, telemetry streaming at 100Hz. Post-State: Pairing timed out after 60s, Bluetooth stayed in 'Connecting', and UI thread watchdog logged an 8.4s freeze."*
-* **Assistant**: *"On a scale of 1 to 5, how would you rate the Frequency of this issue, and on a scale of 1 to 5, how would you rate its Severity? Please provide a brief rationale for both."*
-* **User**: *"Frequency: 4/5 (occurs in ~70% of initial onboarding attempts). Severity: 4/5 (completely blocks device setup for new users with no workaround)."*
-* **Assistant**: *"Looking at the root cause, was this a failure of Requirements (specified wrong), Verification (built wrong), or something else? Please provide any technical root-cause details."*
-* **User**: *"Verification Failure (built wrong). The onboarding manager invoked the pairing UI dialog directly from a background thread instead of dispatching to the Main UI Thread."*
-
-**Final Output Generated by the Skill:**
-```markdown
-# Comprehensive QAC Recommendation Report
+# Comprehensive Quality Assurance Report
 
 | Assessment Metric | Value |
 | :--- | :--- |
-| **Phase** | Phase 3: The True "Thought Partner" (Run) |
-| **Overall Risk Tier** | 🔴 **Critical** (Red) |
-| **Calculated Risk Score** | **16 / 25** (Freq: 4 × Sev: 4) |
+| **Phase** | Phase 3: Thought Partner (Run) |
+| **Overall Risk Tier** | [CRITICAL] **Critical** (Red) |
+| **Calculated Risk Score** | **16 / 25** (Freq: 4 x Sev: 4) |
 | **Root Cause Category** | **Verification Failure (Built Wrong)** |
 | **Recommended Action** | Immediate escalation to on-call engineering; hotfix required. |
 
 ---
 
 ## 1. Executive Summary
-**Peripheral pairing failure caused by background thread UI violation**
+**Hardware peripheral pairing failure caused by background thread UI violation**
 
 ---
 
 ## 2. Quantitative Risk Assessment Matrix
 
-| Dimension | Rating (1–5) | Rationale & Behavioral Evidence |
+| Dimension | Rating (1-5) | Rationale & Behavioral Evidence |
 | :--- | :---: | :--- |
-| **Frequency** | `4 / 5` | Occurs in ~70% of initial onboarding attempts. |
-| **Severity** | `4 / 5` | Completely blocks device setup for new users with no workaround. |
-| **Risk Score** | `16 / 25` | **Critical Tier (Red)** — *Score = Frequency (4) × Severity (4)* |
+| **Frequency** | `4 / 5` | Occurs on approximately 70% of initial onboarding attempts whenever high-frequency sensor streaming is concurrently active. |
+| **Severity** | `4 / 5` | Completely blocks first-time device setup for end users with no automatic recovery or actionable error messaging. |
+| **Risk Score** | `16 / 25` | **Critical Tier (Red)** - *Score = Frequency (4) x Severity (4)* |
 
 > **Quality & Reliability Action Item**:
 > Immediate escalation to on-call engineering; hotfix required.
@@ -267,13 +280,13 @@ The background worker attempted to batch-deserialize an uncompressed 25MB sync p
 
 ## 3. Core Issue & Reproduction Pathway
 ### 3.1 Manifestation & Triggers
-The peripheral pairing dialog fails to render on screen, leaving an infinite loading spinner when the user taps 'Pair New Peripheral' while background telemetry is streaming.
+The peripheral pairing modal dialog fails to render on screen during accessory onboarding, leaving the user interface stuck on an infinite loading spinner. Triggered when the user taps "Pair New Peripheral" while the background telemetry worker holds the main synchronization lock.
 
 ---
 
 ## 4. Environmental & System State Context
-Pre-State: OS 16.5, 1.2 GB RAM available, Bluetooth active, telemetry streaming at 100Hz.
-Post-State: Pairing timed out after 60s, Bluetooth stayed in 'Connecting', and UI thread watchdog logged an 8.4s freeze.
+Pre-State: Host OS version 16.5, available RAM 1.2 GB, wireless peripheral daemon active, peripheral streaming telemetry at 100Hz.
+Post-State: Pairing timeout expires after 60 seconds; peripheral connection state is left stranded in "Connecting"; main UI thread watchdog logs an 8.4-second non-responsive freeze.
 
 ---
 
@@ -282,7 +295,7 @@ Post-State: Pairing timed out after 60s, Bluetooth stayed in 'Connecting', and U
 | Dimension | Classification & Engineering Analysis |
 | :--- | :--- |
 | **Taxonomy Category** | **Verification Failure (Built Wrong)** |
-| **Technical Root Cause** | The onboarding manager invoked the pairing UI dialog directly from a background thread instead of dispatching to the Main UI Thread. |
+| **Technical Root Cause** | The peripheral onboarding coordinator invoked `showPairingDialog()` directly from a background dispatch callback thread instead of dispatching to the Main UI Thread. Unit tests mocked the UI dispatcher layer, and automated integration tests did not assert thread affinity during mock pairing. |
 
 ---
 
@@ -298,12 +311,12 @@ Post-State: Pairing timed out after 60s, Bluetooth stayed in 'Connecting', and U
 
 $$\text{Risk Score} = \text{Frequency} \times \text{Severity} \quad (\text{Frequency}, \text{Severity} \in [1, 5])$$
 
-| Risk Score | Tier Name | Badge / Color | Engineering SLA & Recommendation |
+| Risk Score | Tier Name | Label / Color | Engineering SLA & Recommendation |
 | :---: | :--- | :---: | :--- |
-| **16 – 25** | **Critical** | 🔴 Red | **Immediate Escalation**: Page on-call engineering; hotfix required. |
-| **10 – 15** | **High** | 🟠 Orange | **Current Sprint Priority**: Assign to lead engineer; resolve within 24–48 hours. |
-| **5 – 9** | **Medium** | 🟡 Yellow | **Standard Triage**: Schedule for standard defect backlog in upcoming release. |
-| **1 – 4** | **Low** | 🟢 Green | **Routine Backlog**: Address during maintenance cycles or polish sprints. |
+| **16 - 25** | **Critical** | `[CRITICAL]` Red | **Immediate Escalation**: Page on-call engineering; hotfix required. |
+| **10 - 15** | **High** | `[HIGH]` Orange | **Current Sprint Priority**: Assign to lead engineer; resolve within 24-48 hours. |
+| **5 - 9** | **Medium** | `[MEDIUM]` Yellow | **Standard Triage**: Schedule for standard defect backlog in upcoming release. |
+| **1 - 4** | **Low** | `[LOW]` Green | **Routine Backlog**: Address during maintenance cycles or polish sprints. |
 
 ---
 
@@ -321,7 +334,7 @@ python scripts/anomaly_helper.py --calculate-risk 4 4
   "score": 16,
   "tier_name": "Critical",
   "color": "Red",
-  "badge": "🔴",
+  "badge": "[CRITICAL]",
   "recommendation": "Immediate escalation to on-call engineering; hotfix required."
 }
 ```
@@ -347,22 +360,21 @@ python scripts/anomaly_helper.py --phase 3 --file examples/mock_inputs.json --ou
 
 ## Running Automated Tests
 
-Run the full automated test suite using Python's built-in `unittest`:
+Run the automated test suite using Python's built-in `unittest`:
 
 ```bash
-python3 -m unittest discover -s tests -v
+python3 -B -m unittest discover -s tests -v
 ```
 
-All 25 unit and scenario test cases will execute and validate:
+All 25 unit and scenario test cases validate:
 * Risk tier boundary conditions (Critical, High, Medium, Low).
-* Validation error reporting for missing/empty fields.
+* Validation error reporting for missing or empty fields.
 * Phase normalization and dispatching.
 * Format generation for all 3 report types.
-* Realistic mock scenarios matching all technical specifications.
+* End-to-end scenario workflows across Phases 1, 2, and 3.
 
 ---
 
 ## License
 
 This project is licensed under the Apache License, Version 2.0. See the [LICENSE](LICENSE) file for details.
-

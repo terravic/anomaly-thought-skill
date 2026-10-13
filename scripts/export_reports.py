@@ -15,7 +15,8 @@ from scripts.anomaly_helper import Phase, generate_report, MOCK_SCENARIOS
 def export_all(output_dir: str):
     os.makedirs(output_dir, exist_ok=True)
     for p in [Phase.PHASE_1, Phase.PHASE_2, Phase.PHASE_3]:
-        out_file = os.path.join(output_dir, f"{p.value}_report.md")
+        filename = f"{p.value.replace('_', '')}_report.md"
+        out_file = os.path.join(output_dir, filename)
         content = generate_report(p, MOCK_SCENARIOS[p])
         with open(out_file, "w", encoding="utf-8") as f:
             f.write(content + "\n")

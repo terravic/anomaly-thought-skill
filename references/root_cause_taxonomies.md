@@ -1,6 +1,6 @@
 # Root Cause Taxonomy Reference
 
-In **Phase 3 (The True "Thought Partner")**, anomalies are categorized systematically to facilitate defect prevention and Corrective and Preventive Actions (CAPA).
+In **Phase 3 (Thought Partner)**, anomalies are categorized systematically to facilitate defect prevention and Corrective and Preventive Actions (CAPA).
 
 ---
 

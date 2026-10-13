@@ -5,7 +5,7 @@ Anomaly Helper Module for the Anomaly Thought Partner Skill.
 This module provides:
 1. Risk score calculation and tier classification (Frequency x Severity matrix).
 2. Phase-specific data validation for Crawl (Phase 1), Walk (Phase 2), and Run (Phase 3).
-3. Professional Markdown report generation tailored to each phase.
+3. Structured Markdown report generation tailored to each phase.
 4. CLI and interactive modes for standalone and automated execution.
 """
 
@@ -33,7 +33,7 @@ class Phase(str, Enum):
             return cls.PHASE_1
         elif str_val in ("2", "phase_2", "phase 2", "phase2", "walk", "contextual", "contextual_depth"):
             return cls.PHASE_2
-        elif str_val in ("3", "phase_3", "phase 3", "phase3", "run", "thought_partner", "qac"):
+        elif str_val in ("3", "phase_3", "phase 3", "phase3", "run", "thought_partner", "quality_assurance"):
             return cls.PHASE_3
         else:
             raise ValueError(
@@ -42,10 +42,10 @@ class Phase(str, Enum):
 
 
 class RiskTier(Enum):
-    CRITICAL = ("Critical", "Red", "🔴", 16, 25, "Immediate escalation to on-call engineering; hotfix required.")
-    HIGH = ("High", "Orange", "🟠", 10, 15, "Prioritize in current sprint; assign to lead engineer within 24 hours.")
-    MEDIUM = ("Medium", "Yellow", "🟡", 5, 9, "Schedule for standard bug triage and fix in upcoming release cycle.")
-    LOW = ("Low", "Green", "🟢", 1, 4, "Log in backlog; address during routine maintenance or polish sprint.")
+    CRITICAL = ("Critical", "Red", "[CRITICAL]", 16, 25, "Immediate escalation to on-call engineering; hotfix required.")
+    HIGH = ("High", "Orange", "[HIGH]", 10, 15, "Prioritize in current sprint; assign to lead engineer within 24 hours.")
+    MEDIUM = ("Medium", "Yellow", "[MEDIUM]", 5, 9, "Schedule for standard bug triage and fix in upcoming release cycle.")
+    LOW = ("Low", "Green", "[LOW]", 1, 4, "Log in backlog; address during routine maintenance or polish sprint.")
 
     def __init__(self, tier_name: str, color: str, badge: str, min_score: int, max_score: int, recommendation: str):
         self.tier_name = tier_name
@@ -306,12 +306,12 @@ def format_phase2_report(data: Dict[str, Any]) -> str:
 
 
 def format_phase3_report(data: Dict[str, Any]) -> str:
-    """Format Phase 3 (The True Thought Partner / Run) Comprehensive QAC Report."""
+    """Format Phase 3 (Thought Partner / Run) Comprehensive Quality Assurance Report."""
     freq = int(data.get("frequency", 1))
     sev = int(data.get("severity", 1))
     risk_eval = calculate_risk(freq, sev)
 
-    summary = _extract_summary(data, "Comprehensive QAC Recommendation Report")
+    summary = _extract_summary(data, "Comprehensive Quality Assurance Report")
     core_issue = _clean_str(data.get("core_issue", "N/A"))
     env_state = _clean_str(data.get("environment_state", "N/A"))
     freq_rationale = _clean_str(data.get("frequency_rationale", "Standard observation frequency."))
@@ -319,13 +319,13 @@ def format_phase3_report(data: Dict[str, Any]) -> str:
     root_cause_cat = _clean_str(data.get("root_cause_category", "N/A"))
     root_cause_details = _clean_str(data.get("root_cause_details", "N/A"))
 
-    report = f"""# Comprehensive QAC Recommendation Report
+    report = f"""# Comprehensive Quality Assurance Report
 
 | Assessment Metric | Value |
 | :--- | :--- |
-| **Phase** | Phase 3: The True \"Thought Partner\" (Run) |
+| **Phase** | Phase 3: Thought Partner (Run) |
 | **Overall Risk Tier** | {risk_eval.badge} **{risk_eval.tier_name}** ({risk_eval.color}) |
-| **Calculated Risk Score** | **{risk_eval.score} / 25** (Freq: {freq} × Sev: {sev}) |
+| **Calculated Risk Score** | **{risk_eval.score} / 25** (Freq: {freq} x Sev: {sev}) |
 | **Root Cause Category** | **{root_cause_cat}** |
 | **Recommended Action** | {risk_eval.recommendation} |
 
@@ -338,11 +338,11 @@ def format_phase3_report(data: Dict[str, Any]) -> str:
 
 ## 2. Quantitative Risk Assessment Matrix
 
-| Dimension | Rating (1–5) | Rationale & Behavioral Evidence |
+| Dimension | Rating (1-5) | Rationale & Behavioral Evidence |
 | :--- | :---: | :--- |
 | **Frequency** | `{freq} / 5` | {freq_rationale} |
 | **Severity** | `{sev} / 5` | {sev_rationale} |
-| **Risk Score** | `{risk_eval.score} / 25` | **{risk_eval.tier_name} Tier ({risk_eval.color})** — *Score = Frequency ({freq}) × Severity ({sev})* |
+| **Risk Score** | `{risk_eval.score} / 25` | **{risk_eval.tier_name} Tier ({risk_eval.color})** - *Score = Frequency ({freq}) x Severity ({sev})* |
 
 > **Quality & Reliability Action Item**:
 > {risk_eval.recommendation}
@@ -375,7 +375,7 @@ def format_phase3_report(data: Dict[str, Any]) -> str:
 3. **Process Improvement**: Update architectural/interface verification checklists for this failure class.
 
 ---
-*Report generated via Anomaly Thought Partner (Phase 3: The True \"Thought Partner\").*
+*Report generated via Anomaly Thought Partner (Phase 3: Thought Partner).*
 """
     return report.strip()
 
@@ -419,7 +419,7 @@ MOCK_SCENARIOS = {
     Phase.PHASE_3: {
         "summary": "Hardware peripheral pairing failure caused by background thread UI violation",
         "core_issue": "The peripheral pairing modal dialog fails to render on screen during accessory onboarding, leaving the user interface stuck on an infinite loading spinner. Triggered when the user taps \"Pair New Peripheral\" while the background telemetry worker holds the main synchronization lock.",
-        "environment_state": "Pre-State: Host OS version 16.5, available RAM 1.2 GB, Bluetooth daemon active, peripheral streaming telemetry at 100Hz.\nPost-State: Pairing timeout expires after 60 seconds; peripheral connection state is left stranded in \"Connecting\"; main UI thread watchdog logs an 8.4-second non-responsive freeze.",
+        "environment_state": "Pre-State: Host OS version 16.5, available RAM 1.2 GB, wireless peripheral daemon active, peripheral streaming telemetry at 100Hz.\nPost-State: Pairing timeout expires after 60 seconds; peripheral connection state is left stranded in \"Connecting\"; main UI thread watchdog logs an 8.4-second non-responsive freeze.",
         "frequency": 4,
         "frequency_rationale": "Occurs on approximately 70% of initial onboarding attempts whenever high-frequency sensor streaming is concurrently active.",
         "severity": 4,

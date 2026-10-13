@@ -35,7 +35,7 @@ class TestRiskCalculation(unittest.TestCase):
         self.assertEqual(res.tier, RiskTier.CRITICAL)
         self.assertEqual(res.tier_name, "Critical")
         self.assertEqual(res.color, "Red")
-        self.assertEqual(res.badge, "🔴")
+        self.assertEqual(res.badge, "[CRITICAL]")
 
         # 4 x 4 = 16 -> Critical (Lower boundary for Critical)
         res16 = calculate_risk(4, 4)
@@ -49,7 +49,7 @@ class TestRiskCalculation(unittest.TestCase):
         self.assertEqual(res15.tier, RiskTier.HIGH)
         self.assertEqual(res15.tier_name, "High")
         self.assertEqual(res15.color, "Orange")
-        self.assertEqual(res15.badge, "🟠")
+        self.assertEqual(res15.badge, "[HIGH]")
 
         # 2 x 5 = 10 -> High (Lower boundary for High)
         res10 = calculate_risk(2, 5)
@@ -63,7 +63,7 @@ class TestRiskCalculation(unittest.TestCase):
         self.assertEqual(res9.tier, RiskTier.MEDIUM)
         self.assertEqual(res9.tier_name, "Medium")
         self.assertEqual(res9.color, "Yellow")
-        self.assertEqual(res9.badge, "🟡")
+        self.assertEqual(res9.badge, "[MEDIUM]")
 
         # 1 x 5 = 5 -> Medium (Lower boundary for Medium)
         res5 = calculate_risk(1, 5)
@@ -77,7 +77,7 @@ class TestRiskCalculation(unittest.TestCase):
         self.assertEqual(res4.tier, RiskTier.LOW)
         self.assertEqual(res4.tier_name, "Low")
         self.assertEqual(res4.color, "Green")
-        self.assertEqual(res4.badge, "🟢")
+        self.assertEqual(res4.badge, "[LOW]")
 
         # 1 x 1 = 1 -> Low (Minimum possible)
         res1 = calculate_risk(1, 1)
@@ -143,7 +143,7 @@ class TestDataValidation(unittest.TestCase):
     def test_phase1_valid(self):
         data = {
             "manifestation": "App displays blank white screen on startup",
-            "triggering_event": "User taps launch icon while offline",
+            "triggering_event": "User taps launch button while offline",
             "reproducibility": "100% reproducible",
         }
         is_valid, errors = validate_phase_data(Phase.PHASE_1, data)
@@ -247,9 +247,9 @@ class TestReportFormatting(unittest.TestCase):
     def test_phase3_report_structure(self):
         data = MOCK_SCENARIOS[Phase.PHASE_3]
         report = format_phase3_report(data)
-        self.assertIn("# Comprehensive QAC Recommendation Report", report)
-        self.assertIn("Phase 3: The True \"Thought Partner\" (Run)", report)
-        self.assertIn("🔴 **Critical** (Red)", report)
+        self.assertIn("# Comprehensive Quality Assurance Report", report)
+        self.assertIn("Phase 3: Thought Partner (Run)", report)
+        self.assertIn("[CRITICAL] **Critical** (Red)", report)
         self.assertIn("16 / 25", report)
         self.assertIn("## 2. Quantitative Risk Assessment Matrix", report)
         self.assertIn("## 5. Retrospective Root-Cause Categorization", report)
@@ -264,7 +264,7 @@ class TestReportFormatting(unittest.TestCase):
         self.assertIn("# Detailed Technical Anomaly Report", report2)
 
         report3 = generate_report("run", MOCK_SCENARIOS[Phase.PHASE_3])
-        self.assertIn("# Comprehensive QAC Recommendation Report", report3)
+        self.assertIn("# Comprehensive Quality Assurance Report", report3)
 
     def test_generate_report_validation_failure(self):
         with self.assertRaises(ValueError) as ctx:

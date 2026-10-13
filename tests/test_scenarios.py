@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Scenario-specific automated tests for the 3 specification scenarios.
+Scenario-specific automated tests for Phase 1, Phase 2, and Phase 3 workflows.
 """
 
 import json
@@ -21,7 +21,7 @@ from scripts.anomaly_helper import (
 
 
 class TestMockScenarios(unittest.TestCase):
-    """Automated tests executing the required generic mock test cases."""
+    """Automated tests for Phase 1, Phase 2, and Phase 3 scenario workflows."""
 
     def test_phase1_network_slowdown_scenario(self):
         """Phase 1 Scenario: A simple UI freeze issue during a network slowdown."""
@@ -88,7 +88,7 @@ class TestMockScenarios(unittest.TestCase):
         self.assertEqual(risk_eval.score, 16)
         self.assertEqual(risk_eval.tier, RiskTier.CRITICAL)
         self.assertEqual(risk_eval.color, "Red")
-        self.assertEqual(risk_eval.badge, "🔴")
+        self.assertEqual(risk_eval.badge, "[CRITICAL]")
 
         # 3. Verify Root Cause Categorization
         self.assertIn("Verification Failure", data["root_cause_category"])
@@ -96,9 +96,9 @@ class TestMockScenarios(unittest.TestCase):
 
         # 4. Generate and verify report structure
         report = generate_report(Phase.PHASE_3, data)
-        self.assertIn("# Comprehensive QAC Recommendation Report", report)
-        self.assertIn("Phase 3: The True \"Thought Partner\" (Run)", report)
-        self.assertIn("🔴 **Critical** (Red)", report)
+        self.assertIn("# Comprehensive Quality Assurance Report", report)
+        self.assertIn("Phase 3: Thought Partner (Run)", report)
+        self.assertIn("[CRITICAL] **Critical** (Red)", report)
         self.assertIn("16 / 25", report)
         self.assertIn("## 2. Quantitative Risk Assessment Matrix", report)
         self.assertIn("Verification Failure (Built Wrong)", report)

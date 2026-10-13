@@ -16,7 +16,7 @@
   "phase_3": {
     "summary": "Hardware peripheral pairing failure caused by background thread UI violation",
     "core_issue": "The peripheral pairing modal dialog fails to render on screen during accessory onboarding, leaving the user interface stuck on an infinite loading spinner. Triggered when the user taps \"Pair New Peripheral\" while the background telemetry worker holds the main synchronization lock.",
-    "environment_state": "Pre-State: Host OS version 16.5, available RAM 1.2 GB, Bluetooth daemon active, peripheral streaming telemetry at 100Hz.\nPost-State: Pairing timeout expires after 60 seconds; peripheral connection state is left stranded in \"Connecting\"; main UI thread watchdog logs an 8.4-second non-responsive freeze.",
+    "environment_state": "Pre-State: Host OS version 16.5, available RAM 1.2 GB, wireless peripheral daemon active, peripheral streaming telemetry at 100Hz.\nPost-State: Pairing timeout expires after 60 seconds; peripheral connection state is left stranded in \"Connecting\"; main UI thread watchdog logs an 8.4-second non-responsive freeze.",
     "frequency": 4,
     "frequency_rationale": "Occurs on approximately 70% of initial onboarding attempts whenever high-frequency sensor streaming is concurrently active.",
     "severity": 4,

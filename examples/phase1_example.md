@@ -16,9 +16,9 @@ This example illustrates a complete **Phase 1 (Core Triage)** interaction for lo
 ### Step 0: Phase Selection
 **Assistant**:
 > Welcome to the Anomaly Thought Partner. Which phase would you like to run today?
-> 1. **Phase 1: Core Triage (Crawl)** — Rapid capture of essentials for quick reproduction.
-> 2. **Phase 2: Contextual Depth (Walk)** — Deep environmental and system state parameters.
-> 3. **Phase 3: Thought Partner (Run)** — Root cause analysis and quantitative risk estimation.
+> 1. **Phase 1: Core Triage (Crawl)** - Rapid capture of essentials for quick reproduction.
+> 2. **Phase 2: Contextual Depth (Walk)** - Deep environmental and system state parameters.
+> 3. **Phase 3: Thought Partner (Run)** - Root cause analysis and quantitative risk estimation.
 
 **User**:
 > Let's do Phase 1.

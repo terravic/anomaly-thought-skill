@@ -1,6 +1,6 @@
 # Gentle Disambiguation Guide
 
-When users provide brief, vague, or incomplete responses during the anomaly logging workflow, the assistant must avoid proceeding blindly. Instead, the assistant applies **Gentle Disambiguation** to solicit missing parameters while maintaining a supportive, technical tone.
+When users provide brief, vague, or incomplete responses during the anomaly logging workflow, the assistant must avoid proceeding blindly. Instead, the assistant applies **Gentle Disambiguation** to request the specific missing diagnostic parameters.
 
 ---
 
@@ -8,7 +8,7 @@ When users provide brief, vague, or incomplete responses during the anomaly logg
 
 1. **Acknowledge and Validate**: Briefly acknowledge what the user stated.
 2. **Target Specific Missing Parameters**: Ask specifically for the missing dimension (e.g., error codes, OS version, thread activity, resource constraints).
-3. **Offer Concrete Examples**: Provide 2–3 illustrative examples to guide the engineer without sounding prescriptive.
+3. **Offer Concrete Examples**: Provide 2-3 illustrative examples to guide the user without sounding prescriptive.
 4. **Never Ask Compound Questions**: Keep the follow-up focused on resolving a single ambiguity.
 
 ---
@@ -31,7 +31,7 @@ When users provide brief, vague, or incomplete responses during the anomaly logg
   > *"Could you specify the approximate battery level (e.g., below 10%) and whether OS-level background task throttling was active when this occurred?"*
 
 ### Case 4: "Hardware won't connect."
-* **Ambiguity**: Protocol state, discovery vs pairing vs GATT connection, error codes.
+* **Ambiguity**: Protocol state, discovery vs pairing vs active session connection, error codes.
 * **Gentle Disambiguation**:
   > *"Does the peripheral fail during initial advertisement scanning, during the pairing handshake modal, or after establishing a connection during data streaming?"*
 
